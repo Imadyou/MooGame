@@ -1,0 +1,30 @@
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.exe
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.deps.json
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.runtimeconfig.json
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.dll
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\ref\MooGame.dll
+C:\Code\Clean code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.pdb
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.csproj.AssemblyReference.cache
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.AssemblyInfoInputs.cache
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.AssemblyInfo.cs
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.csproj.CoreCompileInputs.cache
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.dll
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\ref\MooGame.dll
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.pdb
+C:\Code\Clean code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.genruntimeconfig.cache
+C:\Code\Clean_code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.exe
+C:\Code\Clean_code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.deps.json
+C:\Code\Clean_code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.runtimeconfig.json
+C:\Code\Clean_code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.dll
+C:\Code\Clean_code\Clean code laboration\MooGame\bin\Debug\net6.0\MooGame.pdb
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.csproj.AssemblyReference.cache
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.AssemblyInfoInputs.cache
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.AssemblyInfo.cs
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.csproj.CoreCompileInputs.cache
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.dll
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\refint\MooGame.dll
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.pdb
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\MooGame.genruntimeconfig.cache
+C:\Code\Clean_code\Clean code laboration\MooGame\obj\Debug\net6.0\ref\MooGame.dll

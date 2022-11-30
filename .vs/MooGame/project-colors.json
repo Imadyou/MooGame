@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "42cf5c32-fca9-429e-95a4-893ffda5cfa5": {
+      "ProjectGuid": "42cf5c32-fca9-429e-95a4-893ffda5cfa5",
+      "DisplayName": "MooGame",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
