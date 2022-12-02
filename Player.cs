@@ -10,7 +10,7 @@ namespace MooGame
     {
         public string PlayerName { get; private set; }
         public int TotalGames { get; private set; }
-        int totalGuesses;
+        private int totalGuesses;
 
 
         public Player(string playerName, int totalGuesses)
@@ -20,23 +20,35 @@ namespace MooGame
             this.totalGuesses = totalGuesses;
         }
 
-        public void Update(int guesses)
+        public void UpdatePlayerGuesses(int guesses)
         {
             totalGuesses += guesses;
             TotalGames++;
         }
 
-        public double Average()
+        public double GetAverage()
         {
             return (double)totalGuesses / TotalGames;
         }
 
-
-        public override bool Equals(Object player)
+        //ToDo handle the exception.
+        public override bool Equals(Object? player)
         {
-            return PlayerName.Equals(((Player)player).PlayerName);
-        }
+            try
+            {
+                if (player == null)
+                {
+                    return false;
+                }
+                return PlayerName.Equals(((Player)player).PlayerName);
+            }
+            catch (Exception e)
+            {
 
+                throw;
+            }
+            
+        }
 
         public override int GetHashCode()
         {
