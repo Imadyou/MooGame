@@ -12,7 +12,10 @@ namespace MooGame
         public int TotalGames { get; private set; }
         private int totalGuesses;
 
+        public Player()
+        {
 
+        }
         public Player(string playerName, int totalGuesses)
         {
             this.PlayerName = playerName;

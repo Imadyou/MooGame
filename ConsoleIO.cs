@@ -15,8 +15,7 @@ namespace MooGame
 
         public string GetInputString()
         {   
-            return Console.ReadLine();
-           
+            return Console.ReadLine();           
         }
 
         public void PutString(string output)

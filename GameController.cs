@@ -1,14 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace MooGame
 {
    public class GameController
-   {
+   {    private DataAccess dataAccess = new DataAccess();
         private IUI _ui;
         static private string correctNumber = "";
-
+        static private string? playerName;
+        static private int totalGuesses;
+        static private Player player = new Player(playerName,totalGuesses);
         public GameController(IUI ui)
         {
             _ui = ui;
@@ -18,18 +21,18 @@ namespace MooGame
         {
 
             bool GameISRunning = true;
-            string playerName = GetPlayerName();
+            playerName = GetPlayerName();
 
             while (GameISRunning)
             {
                 correctNumber = GenerateNumber();
-         
+
                 _ui.PutString("New game:\n");
 
                 ShowTheCorrectNumber(correctNumber);
                 string playerGuess = _ui.GetInputString();
 
-                int totalGuesses = 1;
+                totalGuesses = 1;
                 string checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(checkedGuess + "\n");
                 while (checkedGuess != "BBBB,")
@@ -41,20 +44,28 @@ namespace MooGame
                     _ui.PutString(checkedGuess + "\n");
                     //lägg till guess again sträng kanske.
                 }
+
                 StreamWriter output = new StreamWriter("result.txt", append: true);
                 output.WriteLine(playerName + "#&#" + totalGuesses);
                 output.Close();
                 ShowTopPlayersList();
                 _ui.PutString("Correct, it took " + totalGuesses + " guesses\nContinue?");
                 string answer = _ui.GetInputString();
-                if (answer != null && answer != "" && answer.Substring(0, 1) == "n")// behöver n eller y också just nu den kör även om man klicker bara på enter.
-                {
-                    GameISRunning = false;
-                }
+                GameISRunning = ValidateAnswer(answer);
             }
         }
 
-       string GetPlayerName()
+        private static bool ValidateAnswer(string answer)
+        {
+            if (answer == null || answer == "" || answer.Substring(0, 1) != "n")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        string GetPlayerName()
         {
             _ui.PutString("Enter your user name:\n");
             string playerName = _ui.GetInputString();
@@ -153,5 +164,7 @@ namespace MooGame
             }
             dataFile.Close();
         }
+
+        
     }
 }
