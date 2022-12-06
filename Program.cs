@@ -2,7 +2,8 @@
 using MooGame;
 
 IUI ui = new ConsoleIO();
-GameController biz=new GameController(ui);
+IDataAccess dataAccess= new DataAccess();
+GameController biz=new GameController(ui,dataAccess);
 biz.Run();
         
     

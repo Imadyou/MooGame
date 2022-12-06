@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,22 +9,15 @@ namespace MooGame
 {
    public class Player
     {
-        public string PlayerName { get; private set; }
-        public int TotalGames { get; private set; }
-        private int totalGuesses;
+        public string PlayerName { get; set; }
+        public int TotalGames { get;  set; }
+        public int totalGuesses { get; set; }
 
         public Player()
         {
-
-        }
-        public Player(string playerName, int totalGuesses)
-        {
-            this.PlayerName = playerName;
             TotalGames = 1;
-            this.totalGuesses = totalGuesses;
         }
-
-        public void UpdatePlayerGuesses(int guesses)
+        public void UpdatePlayersRecord(int guesses)
         {
             totalGuesses += guesses;
             TotalGames++;
@@ -34,7 +28,7 @@ namespace MooGame
             return (double)totalGuesses / TotalGames;
         }
 
-        //ToDo handle the exception.
+        
         public override bool Equals(Object? player)
         {
             try
@@ -50,12 +44,16 @@ namespace MooGame
 
                 throw;
             }
-            
+
+        }
+        public override string ToString()
+        {
+            return  string.Format("{0,-9}{1,5:D}{2,9:F2}", PlayerName, TotalGames, GetAverage());
         }
 
-        public override int GetHashCode()
-        {
-            return PlayerName.GetHashCode();
-        }
+        //public override int gethashcode()
+        //{
+        //    return PlayerName.gethashcode();
+        //}
     }
 }

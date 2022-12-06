@@ -6,22 +6,23 @@ using System.Xml;
 namespace MooGame
 {
    public class GameController
-   {    private DataAccess dataAccess = new DataAccess();
+   {
+        private IDataAccess _dataAccess;
         private IUI _ui;
         static private string correctNumber = "";
-        static private string? playerName;
-        static private int totalGuesses;
-        static private Player player = new Player(playerName,totalGuesses);
-        public GameController(IUI ui)
+   
+        static public  Player player = new Player();
+        public GameController(IUI ui, IDataAccess dataAccess)
         {
             _ui = ui;
+            _dataAccess = dataAccess;
         }
 
         public void Run()
         {
 
             bool GameISRunning = true;
-            playerName = GetPlayerName();
+            player.PlayerName = GetPlayerName();
 
             while (GameISRunning)
             {
@@ -32,24 +33,21 @@ namespace MooGame
                 ShowTheCorrectNumber(correctNumber);
                 string playerGuess = _ui.GetInputString();
 
-                totalGuesses = 1;
+                player.totalGuesses = 1;
                 string checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(checkedGuess + "\n");
                 while (checkedGuess != "BBBB,")
                 {
-                    totalGuesses++;
+                    player.totalGuesses++;
                     playerGuess = _ui.GetInputString();
                     _ui.PutString(playerGuess + "\n");
                     checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                     _ui.PutString(checkedGuess + "\n");
                     //lägg till guess again sträng kanske.
                 }
-
-                StreamWriter output = new StreamWriter("result.txt", append: true);
-                output.WriteLine(playerName + "#&#" + totalGuesses);
-                output.Close();
+                SavePlayerInfo(player);
                 ShowTopPlayersList();
-                _ui.PutString("Correct, it took " + totalGuesses + " guesses\nContinue?");
+                _ui.PutString("Correct, it took " + player.totalGuesses + " guesses\nContinue?");
                 string answer = _ui.GetInputString();
                 GameISRunning = ValidateAnswer(answer);
             }
@@ -136,35 +134,26 @@ namespace MooGame
 
         void ShowTopPlayersList()
         {
-            StreamReader dataFile = new StreamReader("result.txt");
-            List<Player> players = new List<Player>();
-            string dataLine;
-            while ((dataLine = dataFile.ReadLine()) != null)
-            {
-                string[] namesAndScores = dataLine.Split(new string[] { "#&#" }, StringSplitOptions.None);
-                string playerName = namesAndScores[0];
-                int totalGuesses = Convert.ToInt32(namesAndScores[1]);
-                Player player = new Player(playerName, totalGuesses);
-                int index = players.IndexOf(player);
-                if (index < 0)
-                {
-                    players.Add(player);
-                }
-                else
-                {
-                    players[index].UpdatePlayerGuesses(totalGuesses);
-                }
-            }
-
-            players.Sort((player1, player2) => player1.GetAverage().CompareTo(player2.GetAverage()));
+            List<Player> players = _dataAccess.GetplayersList();
             _ui.PutString("Player   games   average");
             foreach (Player player in players)
             {
-                _ui.PutString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.PlayerName, player.TotalGames, player.GetAverage()));
-            }
-            dataFile.Close();
+                _ui.PutString(player.ToString());
+            }           
         }
+        void SavePlayerInfo(Player player)
+        {
+            List<Player> playersData = _dataAccess.GetplayersList();
+            foreach (var playerdata in playersData)
+            {
+                if (playerdata.PlayerName == player.PlayerName)
+            }
+            players.Add(player);
 
-        
+
+
+
+            _dataAccess.PostPlayersList(players);
+        }
     }
 }
