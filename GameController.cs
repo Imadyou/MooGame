@@ -20,7 +20,6 @@ namespace MooGame
 
         public void Run()
         {
-
             bool GameISRunning = true;
             player.PlayerName = GetPlayerName();
 
@@ -33,34 +32,30 @@ namespace MooGame
                 ShowTheCorrectNumber(correctNumber);
                 string playerGuess = _ui.GetInputString();
 
-                player.totalGuesses = 1;
+                player.TotalGuesses = 1;
                 string checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(checkedGuess + "\n");
                 while (checkedGuess != "BBBB,")
                 {
-                    player.totalGuesses++;
+                    player.TotalGuesses++;
                     playerGuess = _ui.GetInputString();
                     _ui.PutString(playerGuess + "\n");
                     checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                     _ui.PutString(checkedGuess + "\n");
                     //lägg till guess again sträng kanske.
                 }
+                player.UpdatePlayersRecord(player.TotalGuesses);
                 SavePlayerInfo(player);
                 ShowTopPlayersList();
-                _ui.PutString("Correct, it took " + player.totalGuesses + " guesses\nContinue?");
+                _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue?");
                 string answer = _ui.GetInputString();
                 GameISRunning = ValidateAnswer(answer);
             }
         }
 
-        private static bool ValidateAnswer(string answer)
+       public bool ValidateAnswer(string answer)
         {
-            if (answer == null || answer == "" || answer.Substring(0, 1) != "n")
-            {
-                return true;
-            }
-
-            return false;
+            return (string.IsNullOrEmpty(answer) || answer.Substring(0, 1) != "n") ? true : false;
         }
 
         string GetPlayerName()
@@ -144,16 +139,15 @@ namespace MooGame
         void SavePlayerInfo(Player player)
         {
             List<Player> playersData = _dataAccess.GetplayersList();
-            foreach (var playerdata in playersData)
+            for (int i = 0; i < playersData.Count; i++)
             {
-                if (playerdata.PlayerName == player.PlayerName)
+                if (playersData[i].PlayerName == player.PlayerName)
+                {
+                    playersData.Insert(i,player);
+                }
             }
-            players.Add(player);
-
-
-
-
-            _dataAccess.PostPlayersList(players);
+            playersData.Add(player);
+            _dataAccess.PostPlayersList(playersData);
         }
     }
 }

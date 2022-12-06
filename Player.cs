@@ -11,7 +11,7 @@ namespace MooGame
     {
         public string PlayerName { get; set; }
         public int TotalGames { get;  set; }
-        public int totalGuesses { get; set; }
+        public int TotalGuesses { get; set; }
 
         public Player()
         {
@@ -19,33 +19,33 @@ namespace MooGame
         }
         public void UpdatePlayersRecord(int guesses)
         {
-            totalGuesses += guesses;
+            TotalGuesses += guesses;
             TotalGames++;
         }
 
         public double GetAverage()
         {
-            return (double)totalGuesses / TotalGames;
+            return (double)TotalGuesses / TotalGames;
         }
 
         
-        public override bool Equals(Object? player)
-        {
-            try
-            {
-                if (player == null)
-                {
-                    return false;
-                }
-                return PlayerName.Equals(((Player)player).PlayerName);
-            }
-            catch (Exception e)
-            {
+        //public override bool Equals(Object? player)
+        //{
+        //    try
+        //    {
+        //        if (player == null)
+        //        {
+        //            return false;
+        //        }
+        //        return PlayerName.Equals(((Player)player).PlayerName);
+        //    }
+        //    catch (Exception e)
+        //    {
 
-                throw;
-            }
+        //        throw;
+        //    }
 
-        }
+        //}
         public override string ToString()
         {
             return  string.Format("{0,-9}{1,5:D}{2,9:F2}", PlayerName, TotalGames, GetAverage());
