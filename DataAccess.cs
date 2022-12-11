@@ -28,7 +28,10 @@ namespace MooGame
         {
             return players = JsonSerializer.Deserialize<List<Player>>(ReadAllFromJson());
         }
+        public void UpdatePlayersList(List<Player> players)
+        {
 
+        }
         public string ReadAllFromJson()
         {
           return  File.ReadAllText("Data.json");

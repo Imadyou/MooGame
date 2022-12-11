@@ -2,16 +2,21 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Xml;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+using System.Numerics;
+using static System.Net.WebRequestMethods;
 
 namespace MooGame
 {
-   public class GameController
-   {
+    public class GameController
+    {
         private IDataAccess _dataAccess;
         private IUI _ui;
         static private string correctNumber = "";
-   
-        static public  Player player = new Player();
+        public Message message = new Message();
+
+        static public Player player = new Player();
         public GameController(IUI ui, IDataAccess dataAccess)
         {
             _ui = ui;
@@ -20,65 +25,55 @@ namespace MooGame
 
         public void Run()
         {
-            bool GameISRunning = true;
-            player.PlayerName = GetPlayerName();
+            string answer;
+            _ui.PutString("Enter your user name:\n");
+            player.PlayerName = GetValidString(_ui.GetInputString());
+            player= CheckIfExsist(player);
 
-            while (GameISRunning)
+            do
             {
-                correctNumber = GenerateNumber();
-
+                correctNumber = GenerateRandomNumber();
                 _ui.PutString("New game:\n");
-
-                ShowTheCorrectNumber(correctNumber);
-                string playerGuess = _ui.GetInputString();
-
-                player.TotalGuesses = 1;
+                /// <summary>
+                /// Should be removed or commented out to play real games!
+                /// </summary>
+                _ui.PutString(ShowTheCorrectNumber(correctNumber));
+                string playerGuess = GetValidString(_ui.GetInputString());
+                player.TotalGuesses=1;
                 string checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(checkedGuess + "\n");
+                
                 while (checkedGuess != "BBBB,")
                 {
                     player.TotalGuesses++;
                     playerGuess = _ui.GetInputString();
                     _ui.PutString(playerGuess + "\n");
                     checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
-                    _ui.PutString(checkedGuess + "\n");
+                    _ui.PutString(checkedGuess + " guess again!\n");
                     //lägg till guess again sträng kanske.
                 }
                 player.UpdatePlayersRecord(player.TotalGuesses);
                 SavePlayerInfo(player);
                 ShowTopPlayersList();
-                _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue?");
-                string answer = _ui.GetInputString();
-                GameISRunning = ValidateAnswer(answer);
-            }
-        }
-
-       public bool ValidateAnswer(string answer)
-        {
-            return (string.IsNullOrEmpty(answer) || answer.Substring(0, 1) != "n") ? true : false;
-        }
-
-        string GetPlayerName()
-        {
-            _ui.PutString("Enter your user name:\n");
-            string playerName = _ui.GetInputString();
-            return playerName;
-        }
+                _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue? n/y: ");
+                answer= GetValidString(_ui.GetInputString());
+            } while (answer!="n");
+        }    
 
         /// <summary>
         /// Should be removed or commented out to play real games!
         /// </summary>
         /// <param name="correctNumber"></param>
-        void ShowTheCorrectNumber(string? correctNumber)
+        public string ShowTheCorrectNumber(string? correctNumber)
         {
-            _ui.PutString("For practice, number is: " + correctNumber + "\n");
+            return "For practice, number is: " + correctNumber + "\n";
         }
 
         /// <summary>
         /// Generts the correct number the plyer should guess.
         /// </summary>
         /// <returns></returns>
-        static string GenerateNumber()
+        static string GenerateRandomNumber()
         {
             Random randomNumberGenerator = new Random();
             string correctNumber = "";
@@ -101,11 +96,10 @@ namespace MooGame
         /// </summary>
         /// <param name="correctNumber"></param>
         /// <param name="playerGuess"></param>
-        /// <returns></returns>
+        /// <returns name="result"></returns>
         static string CheckPlayerGuess(string correctNumber, string playerGuess)
         {
             int cows = 0, bulls = 0;
-            playerGuess += "    ";     // if player entered less than 4 chars, ToDo: do this in the input method of player guesses
 
             for (int i = 0; i < 4; i++)
             {
@@ -127,27 +121,74 @@ namespace MooGame
             return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
         }
 
+        static string ComparePlayerGuess(int correctNumber, string playerGuess)
+        {
+
+        }
+
+
+     
+
+
         void ShowTopPlayersList()
         {
             List<Player> players = _dataAccess.GetplayersList();
-            _ui.PutString("Player   games   average");
-            foreach (Player player in players)
-            {
-                _ui.PutString(player.ToString());
-            }           
+
+                _ui.PutString("Player   games   average");
+                foreach (Player player in players)
+                {
+                    _ui.PutString(player.ToString());
+                } 
+        }
+        public Player CheckIfExsist(Player player)
+        {
+            List<Player> playersData = _dataAccess.GetplayersList();
+            var playerToPlay= playersData.FirstOrDefault(p=>p.PlayerName== player.PlayerName); 
+            if(playerToPlay==null) { return player; }
+            return playerToPlay;
+            
         }
         void SavePlayerInfo(Player player)
         {
-            List<Player> playersData = _dataAccess.GetplayersList();
-            for (int i = 0; i < playersData.Count; i++)
-            {
-                if (playersData[i].PlayerName == player.PlayerName)
-                {
-                    playersData.Insert(i,player);
-                }
-            }
-            playersData.Add(player);
+            List<Player> playersData = _dataAccess.GetplayersList();    
+             playersData.Add(player);           
             _dataAccess.PostPlayersList(playersData);
+        }
+
+        public bool IsValid(string input)
+        {
+            return string.IsNullOrEmpty(input) ? true : false;
+        }
+
+        public string GetValidString(string input)
+        {
+            try
+            {
+            
+            bool success = IsValid(input);
+            while (success)
+            {
+               _ui.PutString("Invalid Input. Input kan not be empty...");
+                    input = _ui.GetInputString();
+                    success= IsValid(input);   
+            }
+                return input;
+            }
+            catch (ArgumentException )
+            {
+
+               return "Invalid Input.";
+            }
+        }
+        public int GetValidInt(string inputAsString)
+        {
+            int number;
+            while (!int.TryParse(inputAsString, out number))
+            {
+                _ui.PutString("This is not a number! please input valid number");
+                inputAsString = GetValidString(_ui.GetInputString());
+            }
+            return number;
         }
     }
 }

@@ -15,7 +15,8 @@ namespace MooGame
 
         public Player()
         {
-            TotalGames = 1;
+            //TotalGames = 1;
+            
         }
         public void UpdatePlayersRecord(int guesses)
         {
