@@ -12,10 +12,10 @@ namespace MooGame
 
         private List<Player> players = new List<Player>();
 
-
+       
         public DataAccess()
         {
-
+       
         }
 
         public void PostPlayersList(List<Player> plyers)
@@ -24,7 +24,7 @@ namespace MooGame
             File.WriteAllText("Data.json", JsonString);
         }
 
-        public List<Player> GetplayersList()
+        public List<Player> GetPlayersList()
         {
             return players = JsonSerializer.Deserialize<List<Player>>(ReadAllFromJson());
         }
@@ -36,6 +36,8 @@ namespace MooGame
         {
           return  File.ReadAllText("Data.json");
         }
+    
+
     }
 
 

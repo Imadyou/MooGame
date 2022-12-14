@@ -14,8 +14,6 @@ namespace MooGame
         private IDataAccess _dataAccess;
         private IUI _ui;
         static private string correctNumber = "";
-        public Message message = new Message();
-
         static public Player player = new Player();
         public GameController(IUI ui, IDataAccess dataAccess)
         {
@@ -39,24 +37,14 @@ namespace MooGame
                 /// </summary>
                 _ui.PutString(ShowTheCorrectNumber(correctNumber));
                 string playerGuess = GetValidString(_ui.GetInputString());
-                player.TotalGuesses=1;
-                string checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
-                _ui.PutString(checkedGuess + "\n");
-                
-                while (checkedGuess != "BBBB,")
-                {
-                    player.TotalGuesses++;
-                    playerGuess = _ui.GetInputString();
-                    _ui.PutString(playerGuess + "\n");
-                    checkedGuess = CheckPlayerGuess(correctNumber, playerGuess);
-                    _ui.PutString(checkedGuess + " guess again!\n");
-                    //lägg till guess again sträng kanske.
-                }
+                string guessToCheck = CheckPlayerGuess(correctNumber, playerGuess);
+                _ui.PutString(guessToCheck + "\n");
+                ControllResult(guessToCheck);
                 player.UpdatePlayersRecord(player.TotalGuesses);
                 SavePlayerInfo(player);
                 ShowTopPlayersList();
                 _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue? n/y: ");
-                answer= GetValidString(_ui.GetInputString());
+                 answer = GetFirstChar();
             } while (answer!="n");
         }    
 
@@ -100,7 +88,7 @@ namespace MooGame
         static string CheckPlayerGuess(string correctNumber, string playerGuess)
         {
             int cows = 0, bulls = 0;
-
+            playerGuess += "    ";
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -120,19 +108,22 @@ namespace MooGame
             }
             return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
         }
-
-        static string ComparePlayerGuess(int correctNumber, string playerGuess)
+        public string ControllResult(string guessToCheck)
         {
-
+            while (guessToCheck != "BBBB,")
+            {
+                player.TotalGuesses++;
+                string playerGuess = GetValidString(_ui.GetInputString());
+                _ui.PutString(playerGuess + "\n");
+                guessToCheck = CheckPlayerGuess(correctNumber, playerGuess);
+                _ui.PutString(guessToCheck + "\n");
+                guessToCheck=_ui.GetInputString();
+            }
+            return guessToCheck;
         }
-
-
-     
-
-
-        void ShowTopPlayersList()
+       public void ShowTopPlayersList()
         {
-            List<Player> players = _dataAccess.GetplayersList();
+        List<Player> players = _dataAccess.GetPlayersList();
 
                 _ui.PutString("Player   games   average");
                 foreach (Player player in players)
@@ -142,7 +133,7 @@ namespace MooGame
         }
         public Player CheckIfExsist(Player player)
         {
-            List<Player> playersData = _dataAccess.GetplayersList();
+            List<Player> playersData = _dataAccess.GetPlayersList();
             var playerToPlay= playersData.FirstOrDefault(p=>p.PlayerName== player.PlayerName); 
             if(playerToPlay==null) { return player; }
             return playerToPlay;
@@ -150,45 +141,69 @@ namespace MooGame
         }
         void SavePlayerInfo(Player player)
         {
-            List<Player> playersData = _dataAccess.GetplayersList();    
+            List<Player> playersData = _dataAccess.GetPlayersList();    
              playersData.Add(player);           
             _dataAccess.PostPlayersList(playersData);
         }
-
-        public bool IsValid(string input)
+        public string GetFirstChar()
         {
-            return string.IsNullOrEmpty(input) ? true : false;
+            string input = GetValidString(_ui.GetInputString());
+            bool isValid = false;
+            while (!isValid)
+            {
+
+                if (input.Length == 1)
+                {
+                    if (input != "y")
+                    {
+                        _ui.PutString("Invalid input, enter one character n or y! ");
+                        input = GetValidString(_ui.GetInputString());
+                    }
+                    if (input == "n")
+                    {
+                        isValid = true;
+                    }
+                    if (input == "y")
+                    {
+                        isValid = true;
+                    }
+                }
+                else if (input.Length != 1)
+                {
+                    _ui.PutString("Invalid input, enter one character n or y! ");
+                    input = GetValidString(_ui.GetInputString());
+                }
+            }
+
+            return input;
         }
-
         public string GetValidString(string input)
-        {
-            try
+        { 
+            bool isValid = IsValidString(input);
+            while (!isValid)
             {
-            
-            bool success = IsValid(input);
-            while (success)
-            {
-               _ui.PutString("Invalid Input. Input kan not be empty...");
-                    input = _ui.GetInputString();
-                    success= IsValid(input);   
+                _ui.PutString("Invalid Input. Input kan not be empty!");
+                input = _ui.GetInputString();
+                isValid = IsValidString(input);
             }
                 return input;
-            }
-            catch (ArgumentException )
-            {
-
-               return "Invalid Input.";
-            }
         }
-        public int GetValidInt(string inputAsString)
+        public bool IsValidString(string input)
         {
-            int number;
-            while (!int.TryParse(inputAsString, out number))
+            return string.IsNullOrEmpty(input) ? false : true;
+        }
+
+        public int GetPlayersMaxTotalGames(List<Player> players)
+        {
+            players = _dataAccess.GetPlayersList();
+
+            if (players is not null)
             {
-                _ui.PutString("This is not a number! please input valid number");
-                inputAsString = GetValidString(_ui.GetInputString());
+                return players.Max(player => player.TotalGames);
             }
-            return number;
+
+            throw new ArgumentNullException("The list is empty!");
+
         }
     }
 }

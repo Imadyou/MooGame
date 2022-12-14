@@ -2,7 +2,7 @@
 {
     public interface IDataAccess
     {
-        List<Player> GetplayersList();
+        List<Player> GetPlayersList();
         void PostPlayersList(List<Player> plyers);
     }
 }
