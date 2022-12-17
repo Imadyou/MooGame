@@ -9,12 +9,12 @@ namespace MooGame
   public static class FakeData
     {
       
-      public static List<Player> GetFakeListOfPlayers()
+        public static List<Player> GetFakeListOfPlayers()
         {
             List<Player> listOfPlayers = new List<Player>
             {
-           new Player
-           { 
+            new Player
+            {  
                 PlayerName = "imad",
                 TotalGames = 1,
                 TotalGuesses =10
@@ -37,7 +37,10 @@ namespace MooGame
             };
             return listOfPlayers;
         }
-
-
+        public static List<Player> GetEmptyPlayersList()
+        {
+            List<Player> list = new List<Player>();
+            return list;
+        }
     }
 }

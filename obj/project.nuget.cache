@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "BuY8fO1l/PP3d/na5jBqe/MpAFyY7jN8YqMlm8sCI1UjGyd3tFp3b+7oESOEJpwmmhIYWIRB/zuNdKWJ1tkvYg==",
+  "dgSpecHash": "dOUWzp3TUzmOwh8MJu+Jaz1eCITF7OA0e5ofwzL1psAamezOu8IuY8i7wWhePiBNaEdZlb6bX6+u/PcLrQ+JJg==",
   "success": true,
   "projectFilePath": "C:\\Code\\Clean_code\\Clean code laboration\\MooGame\\MooGame.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Imad\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

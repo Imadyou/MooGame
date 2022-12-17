@@ -15,13 +15,7 @@ namespace MooGame
 
         public Player()
         {
-          TotalGames = 1;
-          TotalGuesses = 1;
-        }
-        public void UpdatePlayersRecord(int guesses)
-        {
-            TotalGuesses += guesses;
-            TotalGames++;
+       
         }
 
         public double GetAverage()
