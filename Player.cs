@@ -23,7 +23,7 @@ namespace MooGame
             return (double)TotalGuesses / TotalGames;
         }
 
-        public  void UpdatePlayersRecord(int guesses) 
+        public void UpdatePlayersRecord(int guesses) 
         {
             TotalGuesses += guesses;
             TotalGames++;

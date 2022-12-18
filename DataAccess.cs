@@ -51,7 +51,10 @@ namespace MooGame
             }
        
         }
-            
+        /// <summary>
+        /// Saves the Updated player list to the Json file.
+        /// </summary>
+        /// <param name="playersToUpdate"></param>
         public void UpdatePlayersList(List<Player> playersToUpdate) 
         {
             // Save the updated list of players to the JSON file
