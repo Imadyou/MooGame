@@ -13,38 +13,38 @@ namespace MooGame
     {
         private IDataAccess _dataAccess;
         private IUI _ui;
-        static private string correctNumber = "";
         static public Player player = new Player();
+        private static string correctNumber = "";
         public GameController(IUI ui, IDataAccess dataAccess)
         {
             _ui = ui;
             _dataAccess = dataAccess;
         }
+
       
         public void Run()
         {
-            string answer;
+            string answer="";
             _ui.PutString("Enter your user name:\n");
             player.PlayerName = GetValidString(_ui.GetInputString());
-            //checkIfExsist to get players info
-            player=GetPlayerIfExsist();
-            do
+
+            while (answer != "n")
             {
-               string  correctNumber = GenerateRandomNumber();
+                 correctNumber = GenerateRandomNumber();
                 _ui.PutString("New game:\n");
                 /// <summary>
                 /// Should be removed or commented out to play real games!
                 /// </summary>
                 _ui.PutString(ShowTheCorrectNumber(correctNumber));
                 string playerGuess = GetValidString(_ui.GetInputString());
-                string guessToCheck = CheckPlayerGuess(correctNumber, playerGuess);
+                string guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(guessToCheck + "\n");
-                ControllResult(guessToCheck);
-                //player.UpdatePlayersRecord(player.TotalGuesses);
+                PlayOn(guessToCheck);
+                player.UpdatePlayersRecord(player.TotalGuesses);
                 SavePlayerInfo(player);
-                answer = AskPlayerToContinue();
                 ShowTopPlayersList();
-            } while (answer!="n");
+                answer = AskPlayerToContinue();
+            } 
         }    
 
         /// <summary>
@@ -60,17 +60,16 @@ namespace MooGame
         /// Generts the correct number the plyer should guess.
         /// </summary>
         /// <returns></returns>
-        public string GenerateRandomNumber()
+       public string GenerateRandomNumber()
         {
             Random randomNumberGenerator = new Random();
             string correctNumber = "";
             for (int i = 0; i < 4; i++)
             {
-                int randomNumber = randomNumberGenerator.Next(10);
-                string randomDigit = "" + randomNumber;
+                string randomDigit = "";
                 while (correctNumber.Contains(randomDigit))
                 {
-                    randomNumber = randomNumberGenerator.Next(10);
+                    int randomNumber = randomNumberGenerator.Next(10);
                     randomDigit = "" + randomNumber;
                 }
                 correctNumber = correctNumber + randomDigit;
@@ -79,14 +78,15 @@ namespace MooGame
         }
 
         /// <summary>
-        /// Checks if the pl
+        /// Compars the correct number and the player guess and returns string ro controll it. 
         /// </summary>
         /// <param name="correctNumber"></param>
         /// <param name="playerGuess"></param>
-        /// <returns name="result"></returns>
-        public string CheckPlayerGuess(string correctNumber, string playerGuess)
+        /// <returns name="guessToCheck">returns string </returns>
+        public string HandlePlayerGuess(string correctNumber, string playerGuess)
         {
             int cows = 0, bulls = 0;
+            // if player entered less than 4 chars
             playerGuess += "    ";
             for (int i = 0; i < 4; i++)
             {
@@ -108,15 +108,20 @@ namespace MooGame
             return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
         }
 
-        public string ControllResult(string guessToCheck)
+        /// <summary>
+        /// while the players guess is not correct keep playing
+        /// </summary>
+        /// <param name="guessToCheck"></param>
+        /// <returns></returns>
+        public string PlayOn(string guessToCheck)
         {
             while (guessToCheck != "BBBB,")
             {
                 player.TotalGuesses++;
                 string playerGuess = GetValidString(_ui.GetInputString());
-                _ui.PutString(playerGuess + "\n");
-                guessToCheck = CheckPlayerGuess(correctNumber, playerGuess);
-                _ui.PutString(guessToCheck + "\n");
+                _ui.PutString("your guess: "+playerGuess + "\n");
+                guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
+                _ui.PutString("That is correct: "+ guessToCheck + "\n");
             }
             return guessToCheck;
         }
@@ -135,12 +140,12 @@ namespace MooGame
         public void SavePlayerInfo(Player playerToSave)
         {          
             List<Player> playersInfo = _dataAccess.GetPlayersList();
-            foreach (var item in playersInfo)
+            foreach (var playerInfo in playersInfo)
             {
-                if (item.PlayerName == playerToSave.PlayerName)
+                if (playerInfo.PlayerName == playerToSave.PlayerName)
                 {
-                    item.TotalGames = playerToSave.TotalGames;
-                    item.TotalGuesses = playerToSave.TotalGuesses;
+                    playerInfo.TotalGames += playerToSave.TotalGames;
+                    playerInfo.TotalGuesses = playerToSave.TotalGuesses;
                     _dataAccess.UpdatePlayersList(playersInfo);
                 }
                 else
@@ -150,25 +155,7 @@ namespace MooGame
                 }
             }
         }
-        public Player GetPlayerIfExsist()
-        {
-            List<Player> playersInfo = _dataAccess.GetPlayersList();
-            if (playersInfo is null ||playersInfo.Count()==0)
-            {
-                playersInfo?.Add(player);
-                _dataAccess.PostPlayersList(playersInfo);
-            }
-            foreach (var item in playersInfo)
-            {
-                if (player.PlayerName == item.PlayerName)
-                {
-                    player.TotalGames= item.TotalGames;
-                }
-            }
-
-            return player;
-        }
-
+    
         public string AskPlayerToContinue()
         {
             _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue? n/y: ");
@@ -202,12 +189,11 @@ namespace MooGame
 
             return input;
         }
-     
-
+    
         public string GetValidString(string input)
         { 
             bool isValid = IsValidString(input);
-            while (!isValid)
+            while (isValid)
             {
                 _ui.PutString("Invalid Input. Input kan not be empty!");
                 input = _ui.GetInputString();
@@ -218,7 +204,7 @@ namespace MooGame
 
         public bool IsValidString(string input)
         {
-            return string.IsNullOrEmpty(input) ? false : true;
+            return string.IsNullOrEmpty(input) ? true : false;
         }
     }
 }

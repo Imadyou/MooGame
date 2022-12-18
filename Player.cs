@@ -22,7 +22,13 @@ namespace MooGame
         {
             return (double)TotalGuesses / TotalGames;
         }
-  
+
+        public  void UpdatePlayersRecord(int guesses) 
+        {
+            TotalGuesses += guesses;
+            TotalGames++;
+            
+        }
         public override string ToString()
         {
             return  string.Format("{0,-9}{1,5:D}{2,9:F2}", PlayerName, TotalGames, GetAverage());
