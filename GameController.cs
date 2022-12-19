@@ -13,7 +13,7 @@ namespace MooGame
     {
         private IDataAccess _dataAccess;
         private IUI _ui;
-        static public Player player = new Player();
+        public static Player player = new Player();
         private static string correctNumber = "";
         public GameController(IUI ui, IDataAccess dataAccess)
         {
@@ -86,8 +86,8 @@ namespace MooGame
         public string HandlePlayerGuess(string correctNumber, string playerGuess)
         {
             int cows = 0, bulls = 0;
-            // if player entered less than 4 chars
-            playerGuess += "    ";
+            
+            playerGuess += GetFourDigitString();
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -172,6 +172,25 @@ namespace MooGame
                 input = _ui.GetInputString();
             }
         }
+
+        string GetFourDigitString()
+        {
+            while (true)
+            {
+                Console.WriteLine("Please enter a number with four digits: ");
+                string input = Console.ReadLine();
+
+                if (input.Length == 4 && input.All(char.IsDigit))
+                {
+                    return input;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please try again.");
+                }
+            }
+        }
+        
 
         public string ValidateInput(string input)
         { 
