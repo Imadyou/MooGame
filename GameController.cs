@@ -25,7 +25,8 @@ namespace MooGame
         {
             string answer="";
             _ui.PutString("Enter your user name:\n");
-            player.PlayerName = GetValidString(_ui.GetInputString());
+            string input= _ui.GetInputString(); 
+            player.PlayerName = ValidateInput(input);
 
             while (answer != "n")
             {
@@ -35,7 +36,7 @@ namespace MooGame
                 /// Should be removed or commented out to play real games!
                 /// </summary>
                 _ui.PutString(ShowTheCorrectNumber(correctNumber));
-                string playerGuess = GetValidString(_ui.GetInputString());
+                string playerGuess = ValidateInput(_ui.GetInputString());
                 string guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(guessToCheck + "\n");
                 ValidatePlayersGuess(guessToCheck);
@@ -117,7 +118,7 @@ namespace MooGame
             while (guessToCheck != "BBBB,")
             {
                 player.TotalGuesses++;
-                string playerGuess = GetValidString(_ui.GetInputString());
+                string playerGuess = ValidateInput(_ui.GetInputString());
                 _ui.PutString("your guess: "+playerGuess + "\n");
                 guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
                 _ui.PutString("That is correct: "+ guessToCheck + "\n");
@@ -172,7 +173,7 @@ namespace MooGame
             }
         }
 
-        public string GetValidString(string input)
+        public string ValidateInput(string input)
         { 
             bool isValid = IsValidString(input);
             while (isValid)
@@ -186,7 +187,7 @@ namespace MooGame
 
         public bool IsValidString(string input)
         {
-            return string.IsNullOrEmpty(input) ? true : false;
+            return string.IsNullOrEmpty(input);
         }
     }
 }

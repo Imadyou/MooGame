@@ -47,7 +47,7 @@ namespace MooGame
             catch (Exception)
             {
 
-                throw new Exception("We could not find the players information or the pla");
+                throw new Exception("We could not find the players information!");
             }
        
         }
