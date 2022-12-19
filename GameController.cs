@@ -21,7 +21,6 @@ namespace MooGame
             _dataAccess = dataAccess;
         }
 
-      
         public void Run()
         {
             string answer="";
@@ -39,9 +38,9 @@ namespace MooGame
                 string playerGuess = GetValidString(_ui.GetInputString());
                 string guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(guessToCheck + "\n");
-                PlayOn(guessToCheck);
+                ValidatePlayersGuess(guessToCheck);
                 player.UpdatePlayersRecord(player.TotalGuesses);
-                SavePlayerInfo(player);
+                SavePlayersInfo(player);
                 ShowTopPlayersList();
                 answer = AskPlayerToContinue();
             } 
@@ -60,7 +59,7 @@ namespace MooGame
         /// Generts the correct number the plyer should guess.
         /// </summary>
         /// <returns></returns>
-       public string GenerateRandomNumber()
+        public string GenerateRandomNumber()
         {
             Random randomNumberGenerator = new Random();
             string correctNumber = "";
@@ -113,7 +112,7 @@ namespace MooGame
         /// </summary>
         /// <param name="guessToCheck"></param>
         /// <returns></returns>
-        public string PlayOn(string guessToCheck)
+        public string ValidatePlayersGuess(string guessToCheck)
         {
             while (guessToCheck != "BBBB,")
             {
@@ -137,7 +136,7 @@ namespace MooGame
                 } 
         }
 
-        public void SavePlayerInfo(Player playerToSave)
+        public void SavePlayersInfo(Player playerToSave)
         {          
             List<Player> playersInfo = _dataAccess.GetPlayersList();
             foreach (var playerInfo in playersInfo)
@@ -145,7 +144,7 @@ namespace MooGame
                 if (playerInfo.PlayerName == playerToSave.PlayerName)
                 {
                     playerInfo.TotalGames += playerToSave.TotalGames;
-                    playerInfo.TotalGuesses = playerToSave.TotalGuesses;
+                    playerInfo.TotalGuesses += playerToSave.TotalGuesses;
                     _dataAccess.UpdatePlayersList(playersInfo);
                 }
                 else
@@ -155,41 +154,24 @@ namespace MooGame
                 }
             }
         }
-    
+   
         public string AskPlayerToContinue()
         {
-            _ui.PutString("Correct, it took " + player.TotalGuesses + " guesses\nContinue? n/y: ");
-            string input = GetValidString(_ui.GetInputString());
-            bool isValid = false;
-            while (!isValid)
-            {
-                if (input.Length != 1)
-                { 
-                    _ui.PutString("Invalid input, enter one character n or y! ");
-                    input = GetValidString(_ui.GetInputString());
-                }
-                if (input.Length == 1)
-                {
-                  
-                    if (input == "n")
-                    {
-                        break;
-                    }
-                    else if (input == "y")
-                    {
-                        isValid= true;
-                    }
-                    else 
-                    {
-                        _ui.PutString("Invalid input, enter n or y! ");
-                        input = GetValidString(_ui.GetInputString());
-                    }
-                }
-            }
+            _ui.PutString($"Correct, it took {player.TotalGuesses} guesses\nContinue? n/y: ");
 
-            return input;
+            string input = _ui.GetInputString();
+            while (true)
+            {
+                if (input.Length == 1 && (input == "n" || input == "y"))
+                {
+                    return input;
+                }
+
+                _ui.PutString("Invalid input, enter one character n or y! ");
+                input = _ui.GetInputString();
+            }
         }
-    
+
         public string GetValidString(string input)
         { 
             bool isValid = IsValidString(input);
