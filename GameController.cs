@@ -36,7 +36,7 @@ namespace MooGame
                 /// Should be removed or commented out to play real games!
                 /// </summary>
                 _ui.PutString(ShowTheCorrectNumber(correctNumber));
-                string playerGuess = ValidateInput(_ui.GetInputString());
+                string playerGuess = GetFourDigitString();
                 string guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
                 _ui.PutString(guessToCheck + "\n");
                 ValidatePlayersGuess(guessToCheck);
@@ -86,8 +86,7 @@ namespace MooGame
         public string HandlePlayerGuess(string correctNumber, string playerGuess)
         {
             int cows = 0, bulls = 0;
-            
-            playerGuess += GetFourDigitString();
+
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -121,7 +120,6 @@ namespace MooGame
                 string playerGuess = ValidateInput(_ui.GetInputString());
                 _ui.PutString("your guess: "+playerGuess + "\n");
                 guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
-                _ui.PutString("That is correct: "+ guessToCheck + "\n");
             }
             return guessToCheck;
         }
@@ -175,10 +173,10 @@ namespace MooGame
 
         string GetFourDigitString()
         {
-            while (true)
+            do
             {
-                Console.WriteLine("Please enter a number with four digits: ");
-                string input = Console.ReadLine();
+                _ui.PutString("Please enter a number with four digits: ");
+                string input = _ui.GetInputString();
 
                 if (input.Length == 4 && input.All(char.IsDigit))
                 {
@@ -186,11 +184,10 @@ namespace MooGame
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please try again.");
+                    _ui.PutString("Invalid input. Please try again.");
                 }
-            }
+            } while (true);
         }
-        
 
         public string ValidateInput(string input)
         { 
