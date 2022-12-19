@@ -27,7 +27,7 @@ namespace MooGame
             _ui.PutString("Enter your user name:\n");
             string input= _ui.GetInputString(); 
             player.PlayerName = ValidateInput(input);
-
+       
             while (answer != "n")
             {
                  correctNumber = GenerateRandomNumber();
@@ -41,7 +41,7 @@ namespace MooGame
                 _ui.PutString(guessToCheck + "\n");
                 ValidatePlayersGuess(guessToCheck);
                 player.UpdatePlayersRecord(player.TotalGuesses);
-                SavePlayersInfo(player);
+                UpdatePlayersInfo(player);
                 ShowTopPlayersList();
                 answer = AskPlayerToContinue();
             } 
@@ -117,9 +117,10 @@ namespace MooGame
             while (guessToCheck != "BBBB,")
             {
                 player.TotalGuesses++;
-                string playerGuess = ValidateInput(_ui.GetInputString());
+                string playerGuess = GetFourDigitString();
                 _ui.PutString("your guess: "+playerGuess + "\n");
                 guessToCheck = HandlePlayerGuess(correctNumber, playerGuess);
+                _ui.PutString(guessToCheck + "\n");
             }
             return guessToCheck;
         }
@@ -135,25 +136,25 @@ namespace MooGame
                 } 
         }
 
-        public void SavePlayersInfo(Player playerToSave)
-        {          
+        public void UpdatePlayersInfo(Player playerToSave)
+        {
             List<Player> playersInfo = _dataAccess.GetPlayersList();
-            foreach (var playerInfo in playersInfo)
+
+            for (int i = 0; i < playersInfo.Count; i++)
             {
-                if (playerInfo.PlayerName == playerToSave.PlayerName)
+                if (playersInfo[i].PlayerName == playerToSave.PlayerName)
                 {
-                    playerInfo.TotalGames += playerToSave.TotalGames;
-                    playerInfo.TotalGuesses += playerToSave.TotalGuesses;
+                    playersInfo[i].TotalGames += playerToSave.TotalGames;
+                    playersInfo[i].TotalGuesses += playerToSave.TotalGuesses;
                     _dataAccess.UpdatePlayersList(playersInfo);
-                }
-                else
-                {
-                    playersInfo.Add(playerToSave);
-                    _dataAccess.PostPlayersList(playersInfo);
+                    return;
                 }
             }
+
+            playersInfo.Add(playerToSave);
+            _dataAccess.PostPlayersList(playersInfo);
         }
-   
+
         public string AskPlayerToContinue()
         {
             _ui.PutString($"Correct, it took {player.TotalGuesses} guesses\nContinue? n/y: ");
