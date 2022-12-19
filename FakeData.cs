@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MooGame
 {
-  public static class FakeData
+    public static class FakeData
     {
       
             static List<Player> listOfPlayers = new List<Player>
@@ -33,10 +33,12 @@ namespace MooGame
                 TotalGuesses = 4
             }
             };
+
         public static List<Player> GetFakeListOfPlayers()
         {
             return listOfPlayers;
         }
+
         public static List<Player> GetEmptyPlayersList()
         {
             List<Player> list = new List<Player>();
