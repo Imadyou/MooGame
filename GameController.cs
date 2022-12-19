@@ -171,7 +171,7 @@ namespace MooGame
             }
         }
 
-        string GetFourDigitString()
+       public string GetFourDigitString()
         {
             do
             {
