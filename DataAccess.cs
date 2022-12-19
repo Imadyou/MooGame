@@ -11,10 +11,8 @@ namespace MooGame
 {
     public class DataAccess : IDataAccess
     {
-
         private List<Player> players = new List<Player>();
 
-       
         public DataAccess()
         {
          
@@ -65,8 +63,5 @@ namespace MooGame
         {
           return  File.ReadAllText("Data.json");
         }   
-
     }
-
-
 }

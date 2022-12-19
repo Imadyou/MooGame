@@ -10,6 +10,5 @@ namespace MooGame
     {
         void PutString(string output);
         string GetInputString();
-        void Exit();
     }
 }
